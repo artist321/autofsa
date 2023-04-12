@@ -18,7 +18,7 @@ type Rec struct {
 	Col6 string `json:"verifSurname"`
 	Col7 string `json:"verifName"`
 	Col8 string `json:"verifLastname"`
-	Col9 int    `json:"verifSNILS"`
+	Col9 string `json:"verifSNILS"`
 }
 
 func main() {
@@ -69,7 +69,7 @@ func main() {
 		//fmt.Println("clean", snum, len(snum))
 
 		num, _ := strconv.Atoi(row[0])
-		slins, _ := strconv.Atoi(row[8])
+		//slins, _ := strconv.Atoi(row[8])
 		r := Rec{
 			Col1: num,
 			Col2: row[1],
@@ -79,7 +79,7 @@ func main() {
 			Col6: row[5],
 			Col7: row[6],
 			Col8: row[7],
-			Col9: slins,
+			Col9: row[8],
 		}
 		recs = append(recs, r)
 	}
@@ -106,7 +106,7 @@ func main() {
 				<First>%s</First>
 				<Middle>%s</Middle>
 			  </Name>
-			  <SNILS>%d</SNILS>
+			  <SNILS>%s</SNILS>
 			</ApprovedEmployee>
 			<ResultVerification>1</ResultVerification>
 		  </VerificationMeasuringInstrument>
@@ -124,7 +124,7 @@ func main() {
 				<First>%s</First>
 				<Middle>%s</Middle>
 			  </Name>
-			  <SNILS>%d</SNILS>
+			  <SNILS>%s</SNILS>
 			</ApprovedEmployee>
 			<ResultVerification>2</ResultVerification>
 		  </VerificationMeasuringInstrument>
