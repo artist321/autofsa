@@ -33,6 +33,7 @@ clean:
 	rm builds/${BINARY}-macosx
 	rm builds/${BINARY}-linux
 	rm builds/${BINARY}.exe
+	rm builds/${BINARY}_x32.exe
 	rm builds/${BINARY}-apple
 
 
