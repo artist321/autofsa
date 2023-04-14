@@ -18,6 +18,7 @@ build:
 	GOARCH=amd64 GOOS=darwin go build ${LDFLAGS_f1} -o builds/${BINARY}-macosx
 	GOARCH=amd64 GOOS=linux go build  ${LDFLAGS_f1} -o builds/${BINARY}-linux
 	GOARCH=amd64 GOOS=windows go build ${LDFLAGS_f1} -o builds/${BINARY}.exe
+	GOARCH=386 GOOS=windows go build ${LDFLAGS_f1} -o builds/${BINARY}_x32.exe
 	GOARCH=arm64 GOOS=darwin go build ${LDFLAGS_f1} -o builds/${BINARY}-apple
 run:
 	./builds/${BINARY}-apple
