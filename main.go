@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 )
 
@@ -22,6 +23,7 @@ type Rec struct {
 }
 
 func main() {
+	layout := "02.01.2006"
 	var fn string
 	var load string
 	if len(os.Args) > 2 {
@@ -49,6 +51,7 @@ func main() {
 	}
 
 	defer f.Close()
+
 	r := csv.NewReader(f)
 	r.Comma = ';'
 	r.Comment = '#'
@@ -59,21 +62,26 @@ func main() {
 		if err != nil {
 			break
 		}
-		//fmt.Println(snum, len(snum))
 		row[0] = strings.Map(func(r rune) rune {
 			if unicode.IsPrint(r) {
 				return r
 			}
 			return -1
 		}, row[0])
-		//fmt.Println("clean", snum, len(snum))
 
 		num, _ := strconv.Atoi(row[0])
-		//slins, _ := strconv.Atoi(row[8])
+		verifDate, err := time.Parse(layout, row[1])
+		if err != nil {
+			panic(err)
+		}
+		validDate, err := time.Parse(layout, row[2])
+		if err != nil {
+			panic(err)
+		}
 		r := Rec{
 			Col1: num,
-			Col2: row[1],
-			Col3: row[2],
+			Col2: verifDate.Format(time.DateOnly),
+			Col3: validDate.Format(time.DateOnly),
 			Col4: row[3],
 			Col5: row[4],
 			Col6: row[5],
