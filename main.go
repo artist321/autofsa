@@ -4,10 +4,13 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
+
+	"github.com/tealeg/xlsx"
 )
 
 type Rec struct {
@@ -27,29 +30,66 @@ func main() {
 	var fn string
 	var load string
 	if len(os.Args) > 2 {
-		fn = os.Args[1]
-		load = os.Args[2]
+		if len(os.Args[1]) == 2 {
+			load = os.Args[1]
+			fn = os.Args[2]
+		} else if len(os.Args[2]) == 2 {
+			fn = os.Args[2]
+			load = os.Args[1]
+		} else {
+			fmt.Println("Введите корректные данные: \nсsv2xml export.csv -1 [Как черновики] или \nсsv2xml file.csv -2 [Как отправленные]")
+			os.Exit(1)
+		}
+
 		if strings.Contains(load, "-1") {
 			load = "1"
 		} else if strings.Contains(load, "-2") {
 			load = "2"
 		} else {
-			fmt.Println("Введите корректный Тип сохранения данных: сsv2xml export.csv -1 [Как черновики] или сsv2xml file.csv -2 [Как отправленные]")
+			fmt.Println("Введите корректные данные: \nсsv2xml export.csv -1 [Как черновики] или \nсsv2xml file.csv -2 [Как отправленные]")
 			os.Exit(1)
 		}
-	} else if len(os.Args) == 1 {
-		fn = os.Args[1]
-		load = "1"
-	} else {
-		fmt.Println("Введите название файлы [export.csv]")
+	}
+	if strings.Contains(fn, ".xls") {
+
+		xlsxFile, err := xlsx.OpenFile(fn)
+		if err != nil {
+			fmt.Printf("Error opening xlsx file: %s\n", err)
+			os.Exit(1)
+		}
+		cv, err := os.Create(strings.TrimSuffix(fn, filepath.Ext(fn)) + ".csv")
+		if err != nil {
+			fmt.Printf("Error creating csv file: %s\n", err)
+			return
+		}
+		defer cv.Close()
+
+		writer := csv.NewWriter(cv)
+		writer.Comma = ';'
+		for _, sheet := range xlsxFile.Sheets {
+			for _, row := range sheet.Rows {
+				csvRow := make([]string, len(row.Cells))
+				for i, cell := range row.Cells {
+					csvRow[i] = cell.String()
+				}
+				writer.Write(csvRow)
+			}
+		}
+		writer.Flush()
+		layout = "01-02-06"
+		fn = strings.TrimSuffix(fn, filepath.Ext(fn)) + ".csv"
+	}
+
+	if !strings.Contains(fn, ".csv") {
+		fmt.Println("Введите корректные данные: \nсsv2xml export.xlsx -1 [Как черновики] или \nсsv2xml file.xlsx -2 [Как отправленные]")
 		os.Exit(1)
 	}
 
 	f, err := os.Open(fn)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error creating csv file: %s\n", err)
+		return
 	}
-
 	defer f.Close()
 
 	r := csv.NewReader(f)
@@ -57,7 +97,7 @@ func main() {
 	r.Comment = '#'
 	var recs []Rec
 	for i := 1; ; i++ {
-		fmt.Println(i)
+
 		row, err := r.Read()
 		if err != nil {
 			break
@@ -100,7 +140,17 @@ func main() {
 	<Message xsi:noNamespaceSchemaLocation="schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	  <VerificationMeasuringInstrumentData>
 `
-	for _, row := range recs {
+	flog, err := os.OpenFile(os.Args[0]+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
+	currentTime := time.Now()
+	tstamp := currentTime.Format("2006-01-02 15:04:05")
+	if err != nil {
+		fmt.Printf("Error creating log file: %s\n", err)
+		return
+	}
+	defer flog.Close()
+	for i, row := range recs {
+		flog.WriteString(tstamp + " Обработано записей: " + fmt.Sprint(i, " ") + fmt.Sprint(row, "\n"))
+		fmt.Println("Обработано записей: ", i, row)
 		if len([]rune(row.Col5)) == 8 {
 
 			jRow := fmt.Sprintf(`	    <VerificationMeasuringInstrument>
@@ -122,7 +172,7 @@ func main() {
 			jStr += jRow
 		} else {
 			jRow := fmt.Sprintf(`
-				  <VerificationMeasuringInstrument>
+		  <VerificationMeasuringInstrument>
 			<NumberVerification>%d</NumberVerification>
 			<DateVerification>%s</DateVerification>
 			<TypeMeasuringInstrument>%s</TypeMeasuringInstrument>

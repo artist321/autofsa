@@ -4,7 +4,7 @@ BINARY=csv2xml
 # These are the values we want to pass for VERSION and BUILD
 # git tag 1.0.1
 # git commit -am "One more change after the tags"
-VERSION=2.2
+VERSION=2.4
 #VERSION=0.1beta
 #BUILD=`date +%FT%T%z`
 BUILD=`date +%F`
@@ -16,10 +16,11 @@ LDFLAGS_f1=-ldflags "-w -s -X main.Version=${VERSION} -X main.Build=${BUILD}"
 
 build:
 	GOARCH=amd64 GOOS=darwin go build ${LDFLAGS_f1} -o builds/${BINARY}-macosx
+	GOARCH=arm64 GOOS=darwin go build ${LDFLAGS_f1} -o builds/${BINARY}-aarm64
 	GOARCH=amd64 GOOS=linux go build  ${LDFLAGS_f1} -o builds/${BINARY}-linux
 	GOARCH=amd64 GOOS=windows go build ${LDFLAGS_f1} -o builds/${BINARY}.exe
 	GOARCH=386 GOOS=windows go build ${LDFLAGS_f1} -o builds/${BINARY}_x32.exe
-	GOARCH=arm64 GOOS=darwin go build ${LDFLAGS_f1} -o builds/${BINARY}-apple
+
 run:
 	./builds/${BINARY}-apple
 
@@ -31,9 +32,10 @@ zip:
 clean:
 	go clean
 	rm builds/${BINARY}-macosx
+	rm builds/${BINARY}-aarm64
 	rm builds/${BINARY}-linux
 	rm builds/${BINARY}.exe
 	rm builds/${BINARY}_x32.exe
-	rm builds/${BINARY}-apple
+
 
 
