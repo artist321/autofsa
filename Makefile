@@ -2,9 +2,9 @@
 # Builds the project
 BINARY=csv2xml
 # These are the values we want to pass for VERSION and BUILD
-# git tag 1.0.1
-# git commit -am "One more change after the tags"
-VERSION=2.4
+git tag v2.5.0-beta
+git commit -am "One more change after the tags"
+VERSION=2.5.0-beta
 #VERSION=0.1beta
 #BUILD=`date +%FT%T%z`
 BUILD=`date +%F`
