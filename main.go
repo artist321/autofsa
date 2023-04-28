@@ -37,7 +37,7 @@ func main() {
 			fn = os.Args[2]
 			load = os.Args[1]
 		} else {
-			fmt.Println("Введите корректные данные: \nсsv2xml export.csv -1 [Как черновики] или \nсsv2xml file.csv -2 [Как отправленные]")
+			fmt.Println("Введите корректные данные: \nсsv2xml -1 file.csv [Как черновики] или \nсsv2xml -2 file.csv [Как отправленные]")
 			os.Exit(1)
 		}
 
@@ -46,7 +46,7 @@ func main() {
 		} else if strings.Contains(load, "-2") {
 			load = "2"
 		} else {
-			fmt.Println("Введите корректные данные: \nсsv2xml export.csv -1 [Как черновики] или \nсsv2xml file.csv -2 [Как отправленные]")
+			fmt.Println("Введите корректные данные: \nсsv2xml -1 export.xlsx [Как черновики] или \nсsv2xml -2 file.xlsx [Как отправленные]")
 			os.Exit(1)
 		}
 	}
@@ -81,7 +81,8 @@ func main() {
 	}
 
 	if !strings.Contains(fn, ".csv") {
-		fmt.Println("Введите корректные данные: \nсsv2xml export.xlsx -1 [Как черновики] или \nсsv2xml file.xlsx -2 [Как отправленные]")
+
+		fmt.Println("Введите корректные данные: \nсsv2xml -1 file.csv [Как черновики] или \nсsv2xml -2 file.csv [Как отправленные]")
 		os.Exit(1)
 	}
 
@@ -112,11 +113,19 @@ func main() {
 		num, _ := strconv.Atoi(row[0])
 		verifDate, err := time.Parse(layout, row[1])
 		if err != nil {
-			panic(err)
+			layout = "01-02-06"
+			verifDate, err = time.Parse(layout, row[1])
+			if err != nil {
+				panic(err)
+			}
 		}
 		validDate, err := time.Parse(layout, row[2])
 		if err != nil {
-			panic(err)
+			layout = "01-02-06"
+			validDate, err = time.Parse(layout, row[2])
+			if err != nil {
+				panic(err)
+			}
 		}
 		r := Rec{
 			Col1: num,
@@ -131,7 +140,7 @@ func main() {
 		}
 		recs = append(recs, r)
 	}
-	jf, err := os.Create(f.Name() + ".xml")
+	jf, err := os.Create("fsa_upload.xml")
 	if err != nil {
 		panic(err)
 	}
@@ -140,7 +149,7 @@ func main() {
 	<Message xsi:noNamespaceSchemaLocation="schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	  <VerificationMeasuringInstrumentData>
 `
-	flog, err := os.OpenFile(os.Args[0]+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
+	flog, err := os.OpenFile(strings.TrimSuffix(os.Args[0], filepath.Ext(os.Args[0]))+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
 	currentTime := time.Now()
 	tstamp := currentTime.Format("2006-01-02 15:04:05")
 	if err != nil {

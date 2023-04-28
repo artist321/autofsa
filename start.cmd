@@ -1,2 +1,2 @@
-csv2xml.exe export.csv -2
-notepad.exe export.csv.xml
+csv2xml.exe -2 export.csv
+notepad.exe fsa_upload.xml
