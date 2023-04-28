@@ -22,12 +22,13 @@ build:
 	GOARCH=386 GOOS=windows go build ${LDFLAGS_f1} -o builds/${BINARY}_x32.exe
 
 run:
-	./builds/${BINARY}-apple
+	./builds/${BINARY}-apple -2 file.csv
 
 build_and_run: build run
 
-zip:
-
+app: build
+	cp builds/${BINARY}.exe AutoFSA/
+	cp builds/${BINARY}_x32.exe AutoFSA/
 
 clean:
 	go clean
@@ -36,6 +37,8 @@ clean:
 	rm builds/${BINARY}-linux
 	rm builds/${BINARY}.exe
 	rm builds/${BINARY}_x32.exe
+	rm AutoFSA/${BINARY}_x32.exe
+	rm AutoFSA/${BINARY}_x32.exe
 
 
 
