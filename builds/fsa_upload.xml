@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<Message xsi:noNamespaceSchemaLocation="schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	  <VerificationMeasuringInstrumentData>
+	    <VerificationMeasuringInstrument>
+			<NumberVerification>228505828</NumberVerification>
+			<DateVerification>2023-03-06</DateVerification>
+			<DateEndVerification>2025-03-05</DateEndVerification>
+			<TypeMeasuringInstrument>28354-10 ДТС</TypeMeasuringInstrument>
+			<ApprovedEmployee>
+			  <Name>
+				<Last>Медведев</Last>
+				<First>Николай</First>
+				<Middle>Иванович</Middle>
+			  </Name>
+			  <SNILS>03150000208</SNILS>
+			</ApprovedEmployee>
+			<ResultVerification>1</ResultVerification>
+		  </VerificationMeasuringInstrument>
+			    <VerificationMeasuringInstrument>
+			<NumberVerification>228505827</NumberVerification>
+			<DateVerification>2023-03-06</DateVerification>
+			<DateEndVerification>2025-03-05</DateEndVerification>
+			<TypeMeasuringInstrument>36766-08 ТСПТ (платиновые)</TypeMeasuringInstrument>
+			<ApprovedEmployee>
+			  <Name>
+				<Last>Медведев</Last>
+				<First>Николай</First>
+				<Middle>Иванович</Middle>
+			  </Name>
+			  <SNILS>03150000208</SNILS>
+			</ApprovedEmployee>
+			<ResultVerification>1</ResultVerification>
+		  </VerificationMeasuringInstrument>
+			    <VerificationMeasuringInstrument>
+			<NumberVerification>228466327</NumberVerification>
+			<DateVerification>2023-03-06</DateVerification>
+			<DateEndVerification>2024-03-05</DateEndVerification>
+			<TypeMeasuringInstrument>1694-62 Э9-14</TypeMeasuringInstrument>
+			<ApprovedEmployee>
+			  <Name>
+				<Last>Федоров</Last>
+				<First>Олег</First>
+				<Middle>Викторович</Middle>
+			  </Name>
+			  <SNILS>00250000324</SNILS>
+			</ApprovedEmployee>
+			<ResultVerification>1</ResultVerification>
+		  </VerificationMeasuringInstrument>
+			    <VerificationMeasuringInstrument>
+			<NumberVerification>228200359</NumberVerification>
+			<DateVerification>2023-03-06</DateVerification>
+			<DateEndVerification>2024-03-05</DateEndVerification>
+			<TypeMeasuringInstrument>28682-10 Рм-"Диакомс"</TypeMeasuringInstrument>
+			<ApprovedEmployee>
+			  <Name>
+				<Last>Майоров</Last>
+				<First>Дмитрий</First>
+				<Middle>Сергеевич</Middle>
+			  </Name>
+			  <SNILS>04080000618</SNILS>
+			</ApprovedEmployee>
+			<ResultVerification>1</ResultVerification>
+		  </VerificationMeasuringInstrument>
+			    <VerificationMeasuringInstrument>
+			<NumberVerification>227991912</NumberVerification>
+			<DateVerification>2023-03-06</DateVerification>
+			<DateEndVerification>2024-03-05</DateEndVerification>
+			<TypeMeasuringInstrument>50593-12 М&К</TypeMeasuringInstrument>
+			<ApprovedEmployee>
+			  <Name>
+				<Last>Майоров</Last>
+				<First>Дмитрий</First>
+				<Middle>Сергеевич</Middle>
+			  </Name>
+			  <SNILS>04080000618</SNILS>
+			</ApprovedEmployee>
+			<ResultVerification>1</ResultVerification>
+		  </VerificationMeasuringInstrument>
+		  </VerificationMeasuringInstrumentData>
+	<SaveMethod>1</SaveMethod>
+  </Message>

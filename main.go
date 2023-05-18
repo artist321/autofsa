@@ -96,11 +96,13 @@ func main() {
 	r := csv.NewReader(f)
 	r.Comma = ';'
 	r.Comment = '#'
+	r.LazyQuotes = true
 	var recs []Rec
 	for i := 1; ; i++ {
 
 		row, err := r.Read()
 		if err != nil {
+			fmt.Println(err)
 			break
 		}
 		row[0] = strings.Map(func(r rune) rune {
@@ -116,6 +118,7 @@ func main() {
 			layout = "01-02-06"
 			verifDate, err = time.Parse(layout, row[1])
 			if err != nil {
+				fmt.Println(err)
 				panic(err)
 			}
 		}
@@ -124,6 +127,7 @@ func main() {
 			layout = "01-02-06"
 			validDate, err = time.Parse(layout, row[2])
 			if err != nil {
+				fmt.Println(err)
 				panic(err)
 			}
 		}
