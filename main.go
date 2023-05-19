@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -14,15 +13,15 @@ import (
 )
 
 type Rec struct {
-	Col1 int    `json:"arshinNum"`
-	Col2 string `json:"verifDate"`
-	Col3 string `json:"validDate"`
-	Col4 string `json:"typeSi"`
-	Col5 string `json:"conclusion"`
-	Col6 string `json:"verifSurname"`
-	Col7 string `json:"verifName"`
-	Col8 string `json:"verifLastname"`
-	Col9 string `json:"verifSNILS"`
+	Num      string `json:"arshinNum"`
+	Verif    string `json:"verifDate"`
+	Valid    string `json:"validDate"`
+	Type     string `json:"typeSi"`
+	YN       string `json:"conclusion"`
+	Surname  string `json:"verifSurname"`
+	Name     string `json:"verifName"`
+	Lastname string `json:"verifLastname"`
+	Snils    string `json:"verifSNILS"`
 }
 
 func main() {
@@ -81,7 +80,6 @@ func main() {
 	}
 
 	if !strings.Contains(fn, ".csv") {
-
 		fmt.Println("Введите корректные данные: \nсsv2xml -1 file.csv [Как черновики] или \nсsv2xml -2 file.csv [Как отправленные]")
 		os.Exit(1)
 	}
@@ -112,7 +110,10 @@ func main() {
 			return -1
 		}, row[0])
 
-		num, _ := strconv.Atoi(row[0])
+		num := row[0]
+		if num == "" {
+			break
+		}
 		verifDate, err := time.Parse(layout, row[1])
 		if err != nil {
 			layout = "01-02-06"
@@ -122,25 +123,26 @@ func main() {
 				panic(err)
 			}
 		}
-		validDate, err := time.Parse(layout, row[2])
-		if err != nil {
-			layout = "01-02-06"
-			validDate, err = time.Parse(layout, row[2])
+		strValidDate := ""
+		if len([]rune(row[2])) == 8 {
+			validDate, err := time.Parse(layout, row[2])
 			if err != nil {
 				fmt.Println(err)
 				panic(err)
 			}
+			layout = "01-02-06"
+			strValidDate = validDate.Format(time.DateOnly)
 		}
 		r := Rec{
-			Col1: num,
-			Col2: verifDate.Format(time.DateOnly),
-			Col3: validDate.Format(time.DateOnly),
-			Col4: row[3],
-			Col5: row[4],
-			Col6: row[5],
-			Col7: row[6],
-			Col8: row[7],
-			Col9: row[8],
+			Num:      num,
+			Verif:    verifDate.Format(time.DateOnly),
+			Valid:    strValidDate,
+			Type:     row[3],
+			YN:       row[4],
+			Surname:  row[5],
+			Name:     row[6],
+			Lastname: row[7],
+			Snils:    row[8],
 		}
 		recs = append(recs, r)
 	}
@@ -163,11 +165,11 @@ func main() {
 	defer flog.Close()
 	for i, row := range recs {
 		flog.WriteString(tstamp + " Обработано записей: " + fmt.Sprint(i, " ") + fmt.Sprint(row, "\n"))
-		fmt.Println("Обработано записей: ", i, row)
-		if len([]rune(row.Col5)) == 8 {
+		fmt.Println("Обработано записей: ", i+1, row)
+		if len([]rune(row.YN)) == 8 {
 
 			jRow := fmt.Sprintf(`	    <VerificationMeasuringInstrument>
-			<NumberVerification>%d</NumberVerification>
+			<NumberVerification>%s</NumberVerification>
 			<DateVerification>%s</DateVerification>
 			<DateEndVerification>%s</DateEndVerification>
 			<TypeMeasuringInstrument>%s</TypeMeasuringInstrument>
@@ -181,12 +183,12 @@ func main() {
 			</ApprovedEmployee>
 			<ResultVerification>1</ResultVerification>
 		  </VerificationMeasuringInstrument>
-		`, row.Col1, row.Col2, row.Col3, row.Col4, row.Col6, row.Col7, row.Col8, row.Col9)
+		`, row.Num, row.Verif, row.Valid, row.Type, row.Surname, row.Name, row.Lastname, row.Snils)
 			jStr += jRow
 		} else {
 			jRow := fmt.Sprintf(`
 		  <VerificationMeasuringInstrument>
-			<NumberVerification>%d</NumberVerification>
+			<NumberVerification>%s</NumberVerification>
 			<DateVerification>%s</DateVerification>
 			<TypeMeasuringInstrument>%s</TypeMeasuringInstrument>
 			<ApprovedEmployee>
@@ -199,7 +201,7 @@ func main() {
 			</ApprovedEmployee>
 			<ResultVerification>2</ResultVerification>
 		  </VerificationMeasuringInstrument>
-		  `, row.Col1, row.Col2, row.Col4, row.Col6, row.Col7, row.Col8, row.Col9)
+		  `, row.Num, row.Valid, row.Type, row.Surname, row.Name, row.Lastname, row.Snils)
 			jStr += jRow
 		}
 
