@@ -24,7 +24,13 @@ type Rec struct {
 	Snils    string `json:"verifSNILS"`
 }
 
+var (
+	Version string
+	Build   string
+) // version
+
 func main() {
+	fmt.Println("Версия:", Version, Build)
 	layout := "02.01.2006"
 	var fn string
 	var load string
@@ -119,18 +125,34 @@ func main() {
 			layout = "01-02-06"
 			verifDate, err = time.Parse(layout, row[1])
 			if err != nil {
-				fmt.Println(err)
-				panic(err)
+				layout = "01-02-2006"
+				verifDate, err = time.Parse(layout, row[1])
+				if err != nil {
+					layout = "02.01.2006"
+					verifDate, err = time.Parse(layout, row[1])
+					if err != nil {
+						fmt.Println(err)
+						panic(err)
+					}
+				}
 			}
 		}
 		strValidDate := ""
+		layout = "01-02-06"
 		if len([]rune(row[2])) == 8 {
 			validDate, err := time.Parse(layout, row[2])
 			if err != nil {
-				fmt.Println(err)
-				panic(err)
+				layout = "01-02-2006"
+				validDate, err = time.Parse(layout, row[2])
+				if err != nil {
+					layout = "02.01.2006"
+					validDate, err = time.Parse(layout, row[2])
+					if err != nil {
+						fmt.Println(err)
+						panic(err)
+					}
+				}
 			}
-			layout = "01-02-06"
 			strValidDate = validDate.Format(time.DateOnly)
 		}
 		r := Rec{
@@ -201,7 +223,7 @@ func main() {
 			</ApprovedEmployee>
 			<ResultVerification>2</ResultVerification>
 		  </VerificationMeasuringInstrument>
-		  `, row.Num, row.Valid, row.Type, row.Surname, row.Name, row.Lastname, row.Snils)
+		  `, row.Num, row.Verif, row.Type, row.Surname, row.Name, row.Lastname, row.Snils)
 			jStr += jRow
 		}
 
