@@ -132,14 +132,14 @@ func main() {
 					verifDate, err = time.Parse(layout, row[1])
 					if err != nil {
 						fmt.Println(err)
-						panic(err)
+						os.Exit(1)
 					}
 				}
 			}
 		}
 		strValidDate := ""
 		layout = "01-02-06"
-		if len([]rune(row[2])) == 8 {
+		if len([]rune(row[2])) == 10 {
 			validDate, err := time.Parse(layout, row[2])
 			if err != nil {
 				layout = "01-02-2006"
@@ -149,11 +149,14 @@ func main() {
 					validDate, err = time.Parse(layout, row[2])
 					if err != nil {
 						fmt.Println(err)
-						panic(err)
+						os.Exit(1)
 					}
 				}
 			}
 			strValidDate = validDate.Format(time.DateOnly)
+		} else {
+			fmt.Println("error: DataEndVerificarion invalid")
+			os.Exit(1)
 		}
 		r := Rec{
 			Num:      num,
@@ -170,7 +173,7 @@ func main() {
 	}
 	jf, err := os.Create("fsa_upload.xml")
 	if err != nil {
-		panic(err)
+		os.Exit(1)
 	}
 	defer jf.Close()
 	jStr := `<?xml version="1.0" encoding="utf-8"?>
