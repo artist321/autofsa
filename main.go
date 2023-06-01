@@ -131,7 +131,7 @@ func main() {
 					layout = "02.01.2006"
 					verifDate, err = time.Parse(layout, row[1])
 					if err != nil {
-						fmt.Println(err)
+						fmt.Printf("error: DataVerificarion invalid in %d line", i)
 						os.Exit(1)
 					}
 				}
@@ -139,25 +139,35 @@ func main() {
 		}
 		strValidDate := ""
 		layout = "01-02-06"
-		if len([]rune(row[2])) == 10 {
-			validDate, err := time.Parse(layout, row[2])
-			if err != nil {
-				layout = "01-02-2006"
-				validDate, err = time.Parse(layout, row[2])
+		switch {
+		case len([]rune(row[2])) == 8:
+			{
+				validDate, err := time.Parse(layout, row[2])
 				if err != nil {
-					layout = "02.01.2006"
+					layout = "01-02-2006"
 					validDate, err = time.Parse(layout, row[2])
 					if err != nil {
-						fmt.Println(err)
-						os.Exit(1)
+						layout = "02.01.2006"
+						validDate, err = time.Parse(layout, row[2])
+						if err != nil {
+							fmt.Println(err)
+							os.Exit(1)
+						}
 					}
 				}
+				strValidDate = validDate.Format(time.DateOnly)
 			}
-			strValidDate = validDate.Format(time.DateOnly)
-		} else {
-			fmt.Println("error: DataEndVerificarion invalid")
-			os.Exit(1)
+		case len([]rune(row[2])) == 10:
+			{
+				continue
+			}
+		case len([]rune(row[2])) > 10:
+			{
+				fmt.Printf("error: DataEndVerificarion invalid in %d line %s", i, row)
+				os.Exit(1)
+			}
 		}
+
 		r := Rec{
 			Num:      num,
 			Verif:    verifDate.Format(time.DateOnly),

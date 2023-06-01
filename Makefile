@@ -3,7 +3,7 @@ BINARY=autofsa
 # These are the values we want to pass for VERSION and BUILD
 #git tag v2.6.0-beta
 #git commit -am "One more change after the tags"
-VERSION=2.9.0-beta
+VERSION=2.10.0-beta
 #VERSION=0.1beta
 #BUILD=`date +%FT%T%z`
 BUILD=`date +%F`
